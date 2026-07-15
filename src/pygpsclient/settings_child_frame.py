@@ -33,6 +33,7 @@ from tkinter import (
     Spinbox,
     StringVar,
     TclError,
+    Tk,
     W,
     ttk,
 )
@@ -68,6 +69,7 @@ from pygpsclient.globals import (
     ICON_TRANSMIT,
     ICON_TTYCONFIG,
     ICON_UBXCONFIG,
+    ICON_UBXCONFIGLEGACY,
     INFOCOL,
     KNOWNGPS,
     MSGMODES,
@@ -90,6 +92,7 @@ from pygpsclient.strings import (
     DLGTSERVER,
     DLGTTTY,
     DLGTUBX,
+    DLGTUBXLEGACY,
     LBLAUTOSCROLL,
     LBLDATABASERECORD,
     LBLDATADISP,
@@ -103,10 +106,11 @@ from pygpsclient.strings import (
     LBLTRACKRECORD,
     LBLTTYCONFIG,
     LBLUBXCONFIG,
+    LBLUBXLEGACYCONFIG,
 )
 
 MAXLINES = ("200", "500", "1000", "2000", "100")
-FILEDELAYS = (2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000)
+FILEDELAYS = (5, 10, 20, 50, 100, 200, 500, 1000, 2000)  # ms
 
 
 class SettingsChildFrame(Frame):
@@ -114,18 +118,17 @@ class SettingsChildFrame(Frame):
     Settings child frame class.
     """
 
-    def __init__(self, app: Frame, parent: Frame, *args, **kwargs):
+    def __init__(self, app: Tk, parent: Frame, *args, **kwargs):
         """
         Constructor.
 
-        :param Frame app: reference to main tkinter application
+        :param Tk app: reference to main tkinter application
         :param Frame parent: reference to parent frame
         :param args: optional args to pass to Frame parent class
         :param kwargs: optional kwargs to pass to Frame parent class
         """
 
         self.__app = app  # Reference to main application class
-        self.__master = self.__app.appmaster  # Reference to root class (Tk)
         self.__container = parent
 
         super().__init__(parent, *args, **kwargs)
@@ -161,6 +164,7 @@ class SettingsChildFrame(Frame):
         self._img_disconn = ImageTk.PhotoImage(Image.open(ICON_DISCONN))
         self._img_exit = ImageTk.PhotoImage(Image.open(ICON_POWEROFF))
         self._img_ubxconfig = ImageTk.PhotoImage(Image.open(ICON_UBXCONFIG))
+        self._img_ubxconfiglegacy = ImageTk.PhotoImage(Image.open(ICON_UBXCONFIGLEGACY))
         self._img_nmeaconfig = ImageTk.PhotoImage(Image.open(ICON_NMEACONFIG))
         self._img_ttyconfig = ImageTk.PhotoImage(Image.open(ICON_TTYCONFIG))
         self._img_ntripconfig = ImageTk.PhotoImage(Image.open(ICON_NTRIPCONFIG))
@@ -294,7 +298,7 @@ class SettingsChildFrame(Frame):
         self._spn_conformat = Spinbox(
             self._frm_options,
             values=FORMATS,
-            width=10,
+            width=15,
             state=READONLY,
             wrap=True,
             textvariable=self._console_format,
@@ -379,6 +383,17 @@ class SettingsChildFrame(Frame):
             width=45,
             image=self._img_ubxconfig,
             command=lambda: self.__app.start_dialog(DLGTUBX),
+            cursor=CLICK_CURSOR,
+        )
+        self._lbl_ubxlegacyconfig = Label(
+            self._frm_options_btns,
+            text=LBLUBXLEGACYCONFIG,
+        )
+        self._btn_ubxlegacyconfig = Button(
+            self._frm_options_btns,
+            width=45,
+            image=self._img_ubxconfiglegacy,
+            command=lambda: self.__app.start_dialog(DLGTUBXLEGACY),
             cursor=CLICK_CURSOR,
         )
         self._lbl_nmeaconfig = Label(
@@ -495,14 +510,16 @@ class SettingsChildFrame(Frame):
         self._frm_options_btns.grid(column=0, row=10, columnspan=4, sticky=EW)
         self._btn_ubxconfig.grid(column=0, row=0, padx=2, pady=1)
         self._lbl_ubxconfig.grid(column=0, row=1)
-        self._btn_nmeaconfig.grid(column=1, row=0, padx=2, pady=1)
-        self._lbl_nmeaconfig.grid(column=1, row=1)
-        self._btn_ttyconfig.grid(column=2, row=0, padx=2, pady=1)
-        self._lbl_ttyconfig.grid(column=2, row=1)
-        self._btn_ntripconfig.grid(column=3, row=0, padx=2, pady=1)
-        self._lbl_ntripconfig.grid(column=3, row=1)
-        self._btn_serverconfig.grid(column=4, row=0, padx=2, pady=1)
-        self._lbl_serverconfig.grid(column=4, row=1)
+        self._btn_ubxlegacyconfig.grid(column=1, row=0, padx=2, pady=1)
+        self._lbl_ubxlegacyconfig.grid(column=1, row=1)
+        self._btn_nmeaconfig.grid(column=2, row=0, padx=2, pady=1)
+        self._lbl_nmeaconfig.grid(column=2, row=1)
+        self._btn_ttyconfig.grid(column=3, row=0, padx=2, pady=1)
+        self._lbl_ttyconfig.grid(column=3, row=1)
+        self._btn_ntripconfig.grid(column=4, row=0, padx=2, pady=1)
+        self._lbl_ntripconfig.grid(column=4, row=1)
+        self._btn_serverconfig.grid(column=5, row=0, padx=2, pady=1)
+        self._lbl_serverconfig.grid(column=5, row=1)
 
     def _attach_events(self, add: bool = True):
         """
@@ -568,7 +585,7 @@ class SettingsChildFrame(Frame):
             self._record_database.set(cfg.get("database_b"))
         else:
             self._record_database.set(0)
-            self._chk_recorddatabase.config(state=DISABLED)
+            self._chk_recorddatabase["state"] = DISABLED
 
         self.clients = self.__app.server_status
         self.enable_controls(self.__app.conn_status)
@@ -730,7 +747,7 @@ class SettingsChildFrame(Frame):
             if self.logpath is not None:
                 self.__app.configuration.set("datalog_b", 1)
                 self.__app.configuration.set("logpath_s", self.logpath)
-                self.__app.status_label = (
+                self.__app.set_status_label(
                     f"Data logging enabled: {self.logpath}",
                     INFOCOL,
                 )
@@ -740,13 +757,13 @@ class SettingsChildFrame(Frame):
             else:
                 self.logpath = ""
                 self._datalog.set(0)
-            self._spn_datalog.config(state=DISABLED)
+            self._spn_datalog["state"] = DISABLED
         else:
             self.__app.configuration.set("datalog_b", 0)
             self._datalog.set(0)
             self.__app.file_handler.close_logfile()
-            self.__app.status_label = ("Data logging disabled", INFOCOL)
-            self._spn_datalog.config(state=READONLY)
+            self.__app.set_status_label("Data logging disabled", INFOCOL)
+            self._spn_datalog["state"] = READONLY
 
     def _on_record_track(self, var, index, mode):
         """
@@ -759,7 +776,9 @@ class SettingsChildFrame(Frame):
             if self.trackpath is not None:
                 self.__app.configuration.set("recordtrack_b", 1)
                 self.__app.configuration.set("trackpath_s", self.trackpath)
-                self.__app.status_label = f"Track recording enabled: {self.trackpath}"
+                self.__app.set_status_label(
+                    f"Track recording enabled: {self.trackpath}"
+                )
                 if not self.__app.file_handler.open_trackfile():
                     self.trackpath = ""
                     self._record_track.set(0)
@@ -770,7 +789,7 @@ class SettingsChildFrame(Frame):
             self._record_track.set(0)
             self.__app.configuration.set("recordtrack_b", 0)
             self.__app.file_handler.close_trackfile()
-            self.__app.status_label = "Track recording disabled"
+            self.__app.set_status_label("Track recording disabled")
 
     def _on_record_database(self, var, index, mode):
         """
@@ -789,7 +808,7 @@ class SettingsChildFrame(Frame):
                 self._record_database.set(0)
         else:
             self.__app.configuration.set("database_b", 0)
-            self.__app.status_label = "Database recording disabled"
+            self.__app.set_status_label("Database recording disabled")
 
     def _on_connect(self, conntype: int):
         """
@@ -805,7 +824,6 @@ class SettingsChildFrame(Frame):
             "eof_event": GNSS_EOF_EVENT,
             "timeout_event": GNSS_TIMEOUT_EVENT,
             "error_event": GNSS_ERR_EVENT,
-            "inqueue": self.__app.gnss_inqueue,
             "outqueue": self.__app.gnss_outqueue,
             "socket_inqueue": self.__app.socket_inqueue,
             "conntype": conntype,
@@ -813,6 +831,11 @@ class SettingsChildFrame(Frame):
             "inactivity_timeout": self.frm_serial.inactivity_timeout,
             "tlscrtpath": self.__app.configuration.get("tlscrtpath_s"),
         }
+
+        if conntype == DISCONNECTED:
+            if self.__app.conn_status != DISCONNECTED:
+                self.__app.conn_status = DISCONNECTED
+                return
 
         if conntype == CONNECTED:
             frm = self.frm_serial
@@ -825,7 +848,7 @@ class SettingsChildFrame(Frame):
         elif conntype == CONNECTED_SOCKET:
             frm = self.frm_socketclient
             if not frm.valid_settings():
-                self.__app.status_label = ("ERROR - invalid settings", ERRCOL)
+                self.__app.set_status_label("ERROR - invalid settings", ERRCOL)
                 return
             connstr = f"{frm.server.get()}:{frm.port.get()}"
             conndict = dict(conndict, **{"socket_settings": frm})
@@ -845,17 +868,10 @@ class SettingsChildFrame(Frame):
                 return
             connstr = f"{self.infilepath}"
             conndict = dict(conndict, **{"in_filepath": self.infilepath})
-        elif conntype == DISCONNECTED:
-            if self.__app.conn_status != DISCONNECTED:
-                self.__app.conn_status = DISCONNECTED
-                self.__app.stream_handler.stop()
-                return
-        else:
-            return
 
         self.__app.conn_status = conntype
-        self.__app.conn_label = (connstr, OKCOL)
-        self.__app.status_label = ("", INFOCOL)
+        self.__app.set_conn_label(connstr, OKCOL)
+        self.__app.set_status_label("", INFOCOL)
         self.__app.last_map_update = 0  # reset MAPQuest API refresh clock
         self.__app.gnss_status.reset()  # reset all GNSS data
         self.__app.stream_handler.start(self.__app, conndict)
@@ -874,27 +890,23 @@ class SettingsChildFrame(Frame):
         self.frm_serial.status_label = status
         self.frm_socketclient.status_label = status
 
-        self._btn_connect.config(
-            state=(
-                DISABLED
-                if status in (CONNECTED, CONNECTED_SOCKET, CONNECTED_FILE, NOPORTS)
-                else NORMAL
-            )
+        self._btn_connect["state"] = (
+            DISABLED
+            if status in (CONNECTED, CONNECTED_SOCKET, CONNECTED_FILE, NOPORTS)
+            else NORMAL
         )
         for ctl in (
             self._btn_connect_socket,
             self._btn_connect_file,
             self._chk_tty,
         ):
-            ctl.config(
-                state=(
-                    DISABLED
-                    if status in (CONNECTED, CONNECTED_SOCKET, CONNECTED_FILE)
-                    else NORMAL
-                )
+            ctl["state"] = (
+                DISABLED
+                if status in (CONNECTED, CONNECTED_SOCKET, CONNECTED_FILE)
+                else NORMAL
             )
-        self._btn_disconnect.config(
-            state=(DISABLED if status in (DISCONNECTED,) else NORMAL)
+        self._btn_disconnect["state"] = (
+            DISABLED if status in (DISCONNECTED,) else NORMAL
         )
 
     def get_size(self) -> tuple:

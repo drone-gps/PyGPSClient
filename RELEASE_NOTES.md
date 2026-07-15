@@ -1,5 +1,24 @@
 # PyGPSClient Release Notes
 
+### RELEASE 1.7.1
+
+FIXES:
+
+1. Fix 'memory leak' issue (socket server message queue filling up when server not active).
+1. Internal refactoring and performance enhancements to improve long-term UI responsiveness and stability.
+1. Fix u-blox preset configuration validation which was preventing some valid preset commands.
+
+ENHANCEMENTS:
+
+1. Split UBX Configuration panel into two separate panels - one for modern (Gen9+) receivers and one for legacy (Gen8-) receivers. The intention is to make the panels easier to use on lower-resolution or scaled displays.
+1. Display UBX NAV-DAHEADING data from dual-antenna receivers such as the u-blox ZED-X20D in the "Rover Plot" widget.
+1. Update portid designation in System Monitor I/O widget (X20 assigns different MON-COMMS.portids to F9P).
+1. Add satellite filter entry field to RINEX conversion dialog (requires pygnssutils>=1.2.6).
+
+DEPRECATION NOTICE:
+
+1. Since u-blox discontinued their Thingstream PointPerfect L-Band and MQTT encrypted SPARTN services in October 2025, the [SPARTN Configuration Panel](https://github.com/semuconsulting/PyGPSClient/blob/master/SPARTN.md) is redundant. The panel and its associated package dependencies (including `paho-mqtt`) will be removed in the next version of PyGPSClient (provisionally 1.7.2). The NTRIP Client facility will continue to support unencrypted SPARTN NTRIP streams.
+
 ### RELEASE 1.7.0
 
 1. Can now double-click to toggle between 'hae' (height above ellipsoid) and 'sep' (separation) values in banner panel.
