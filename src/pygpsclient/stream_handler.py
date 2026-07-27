@@ -527,7 +527,3 @@ class StreamHandler:
         # update GPX track file if enabled
         if self.__app.configuration.get("recordtrack_b"):
             self.__app.file_handler.update_gpx_track()
-
-        # update database if enabled
-        if self.__app.configuration.get("database_b"):
-            self.__app.sqlite_handler.load_data()

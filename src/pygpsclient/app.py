@@ -255,7 +255,8 @@ class App(Tk):
 
         # display any deferred messages
         if isinstance(self._deferredmsg, tuple):
-            self.set_status_label(self._deferredmsg)
+            msg, col = self._deferredmsg
+            self.set_status_label(msg, col)
             self._deferredmsg = None
 
         # check for more recent version (if enabled)
@@ -582,6 +583,10 @@ class App(Tk):
                 if hasattr(frm, "update_frame") and wdgdata[VISIBLE]:
                     frm.update_frame()
         self.update()
+
+        # update database if enabled (must be done in main App thread)
+        if self.configuration.get("database_b"):
+            self.sqlite_handler.load_data()
 
         if self.conn_status != DISCONNECTED or self.rtk_conn_status != DISCONNECTED:
             update_interval = int(self.configuration.get("guiupdateinterval_f") * 1000)
