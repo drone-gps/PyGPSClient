@@ -400,15 +400,6 @@ By default, the server/caster binds to the host address '0.0.0.0' (IPv4) or '::'
 ¹ Unicore and Septentrio devices do not appear to support an SVIN status output message, so Survey-in % completion is not available.
 
 ---
-## <a name="spartnconfig">SPARTN Client Facilities</a>
-
-  ### NB: As of October 2025, u-blox have discontinued both their L-Band and MQTT encrypted SPARTN correction services, so the SPARTN Client functionality is effectively redundant and may be removed in a subsequent version of PyGPSClient.
-
-  The SPARTN MQTT and L-Band configuration panels are now disabled by default, though the L-Band panel can in theory still be used for other generic L-Band modem configuration purposes and can be re-enabled by setting json configuration parameter `lband_enabled_b` to `1`.
-
-Please refer to [SPARTN.md](https://github.com/semuconsulting/PyGPSClient/blob/master/SPARTN.md) for instructions.
-
----
 ## <a name="gpxviewer">GPX Track Viewer</a>
 
 ![gpxviewer screenshot](https://github.com/semuconsulting/PyGPSClient/blob/master/images/gpxviewer.png?raw=true)

@@ -25,7 +25,6 @@ from pygpsclient.recorder_dialog import RecorderDialog
 from pygpsclient.rinex_dialog import RINEXDialog
 from pygpsclient.serverconfig_dialog import ServerConfigDialog
 from pygpsclient.settings_dialog import SettingsDialog
-from pygpsclient.spartn_dialog import SPARTNConfigDialog
 from pygpsclient.strings import (
     DLG,
     DLGTABOUT,
@@ -37,7 +36,6 @@ from pygpsclient.strings import (
     DLGTRINEX,
     DLGTSERVER,
     DLGTSETTINGS,
-    DLGTSPARTN,
     DLGTTTY,
     DLGTUBX,
     DLGTUBXLEGACY,
@@ -87,11 +85,6 @@ class DialogState:
                 CLASS: ServerConfigDialog,
                 DLG: None,
                 RESIZE: True,
-            },
-            DLGTSPARTN: {
-                CLASS: SPARTNConfigDialog,
-                DLG: None,
-                RESIZE: False,
             },
             DLGTGPX: {
                 CLASS: GPXViewerDialog,
