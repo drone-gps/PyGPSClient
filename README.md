@@ -26,7 +26,7 @@ PyGPSClient is a free, open-source, multi-platform graphical GNSS/GPS testing, d
 * Provides [NTRIP client](#ntripconfig) facilities for both RTCM3 and SPARTN NTRIP services.
 * Can serve as an [NTRIP base station](#basestation) with an RTK-compatible receiver (e.g. u-blox ZED-F9P/ZED-X20P, Quectel LG/LC Series, Septentrio Mosaic Series or Unicore UM9** Series).
 * Supports GNSS (*and related*) device configuration via proprietary UBX, NMEA and ASCII TTY protocols, including most u-blox, Quectel, Septentrio, Unicore and Feyman GNSS devices.
-* **New in version >= 1.6.7** - Experimental support for [RINEX conversion](#rinex) of raw observation, navigation and meteorology data.
+* Experimental support for [RINEX conversion](#rinex) of raw observation, navigation and meteorology data.
 * Can be installed using the standard `pip` Python package manager - see [installation instructions](#installation) below.
 
 This is an independent project and we have no affiliation whatsoever with any GNSS manufacturer or distributor.
@@ -59,7 +59,7 @@ This is an independent project and we have no affiliation whatsoever with any GN
 
 The PyGPSClient home page is at [PyGPSClient](https://github.com/semuconsulting/PyGPSClient). 
 
-Contributions welcome - please refer to [CONTRIBUTING.MD](https://github.com/semuconsulting/PyGPSClient/blob/master/CONTRIBUTING.md).
+Contributions from human beings welcome - please refer to [CONTRIBUTING.MD](https://github.com/semuconsulting/PyGPSClient/blob/master/CONTRIBUTING.md).
 
 For [Bug reports](https://github.com/semuconsulting/PyGPSClient/blob/master/.github/ISSUE_TEMPLATE/bug_report.md), please use the template provided. For feature requests and general queries and advice, post a message to one of the [PyGPSClient Discussions](https://github.com/semuconsulting/PyGPSClient/discussions) channels in the first instance.
 
@@ -108,7 +108,6 @@ For more comprehensive installation instructions, please refer to [INSTALLATION.
 1. By default, the Settings panel is displayed to the right of the main application window. It can be hidden or shown via Menu..View..Hide/Show Settings. The panel can also be 'undocked' from the main application window via Menu..View..Undock Settings and - if [non-transient](#transient) (`transient_dialog_b: 0`) - minimized independently of the main window. Exiting the undocked dialog, or selecting Menu..View..Dock Settings, will 'dock' the panel.
 2. Protocols Shown - Select which message protocols to display in the console; NMEA, UBX (*u-blox binary*), SBF (*Septentrio binary*), UNI (*Unicore binary*), QGC (*Quectel binary*), RTCM3, SPARTN or TTY (*terminal*). NB: this only changes the *displayed* protocols - to change the actual protocols output by the receiver, use the relevant configuration command(s).
     - **NB:** Serial connection must be stopped before changing to or from TTY (terminal) protocol or "Meta Only" mode. Enabling TTY (terminal) mode will disable all other protocols.
-    - If "Meta Only" is enabled, the underlying `GNSSReader` parser will *only* parse basic metadata from each incoming raw message (protocol, identity, length). This mode is vastly quicker (≈ 100x) than full parsing, but individual data attributes *will no longer be available* and PyGPSClient's widgets other than console will *not* be updated.
 3. To connect to a GNSS receiver via USB or UART port, select the device from the listbox, set the appropriate serial connection parameters and click 
 ![connect icon](https://github.com/semuconsulting/PyGPSClient/blob/master/src/pygpsclient/resources/usbport-1-24.png?raw=true). The application will endeavour to pre-select a recognised GNSS/GPS device but this is platform and device dependent. Press the ![refresh](https://github.com/semuconsulting/PyGPSClient/blob/master/src/pygpsclient/resources/iconmonstr-refresh-6-16.png?raw=true) button to refresh the list of connected devices at any point. 
     - `Rate bps` (baud rate) is typically the only setting that might need adjusting, but tweaking the `timeout` setting may improve performance on certain platforms. 
@@ -136,7 +135,6 @@ For more comprehensive installation instructions, please refer to [INSTALLATION.
 15. Configuration settings for PyGPSClient can be saved and recalled via the Menu..File..Save/Load Configuration options. By default, PyGPSClient will look for a file named `pygpsclient.json` in the user's home directory. Certain configuration settings require manual editing e.g. custom preset UBX, NMEA and TTY commands and tag colour schemes - see details below.
     - It is recommended to re-save the configuration settings after each PyGPSClient version update, or if you see the warning "Consider re-saving" on startup.
     - PyGPSClient will prompt you to stop all running input and output streams before loading a new configuration.
-    - Any active serial or RTK connection must be stopped before loading a new configuration.
 
 #### <a name="updates">Checking for the latest version</a>
 
@@ -147,7 +145,7 @@ For more comprehensive installation instructions, please refer to [INSTALLATION.
 
 17. DataLogging - Turn Data logging in the selected format (Binary, Parsed, Hex Tabular, Hex String, Parsed+Hex Tabular) on or off. On first selection, you will be prompted to select the directory into which timestamped log files are saved. Log files are cycled when a maximum size is reached (default is 10 MB, manually configurable via `logsize_n` setting).
 
-    **NB**: For extended datalogging (> 2 hours or more) it is **strongly** recommended to use an unattended (e.g. CLI) tool like [GNSSStreamer](https://github.com/semuconsulting/pygnssutils#gnssstreamer) rather than an attended GUI tool like PyGPSClient (*especially if you're running 'headless'*), e.g.:
+    **NB**: For extended datalogging (> 2 hours or more), you may want to consider using an unattended (e.g. CLI) tool like [GNSSStreamer](https://github.com/semuconsulting/pygnssutils#gnssstreamer) (installed with PyGPSClient) rather than an attended GUI tool like PyGPSClient (*especially if you're running 'headless'*), e.g.:
     ```shell
     gnssstreamer --port /dev/ttyACM0 --baudrate 115200 --timeout 3 --format 2 --clioutput 1 --output pygpsdata.log --verbosity 2
     ```
@@ -179,7 +177,7 @@ For more comprehensive installation instructions, please refer to [INSTALLATION.
 
 #### <a name="refreshrate">GUI refresh rate setting</a>
 
-31. PyGPSClient processes all incoming GNSS data in 'real time' but, by default, the GUI is only refreshed every 0.5 seconds. The refresh rate can be manually configured via the `guiupdateinterval_f` setting in the json configuration file. **NB:** PyGPSClient may become unresponsive on slower platforms (e.g. Raspberry Pi) at high message rates if the GUI update interval is less than 0.1 seconds, though lower intervals (<= 0.1 secs) can be accommodated on more powerful platforms.
+31. PyGPSClient processes all incoming GNSS data in 'real time' but, by default, the GUI is only refreshed every 0.5 seconds. The refresh rate can be manually configured via the `guiupdateinterval_f` setting in the json configuration file. **NB:** PyGPSClient may become unresponsive on slower platforms (e.g. Raspberry Pi) at high message rates if the GUI update interval is less than 0.1 seconds.
 
 #### <a name="transient">Toplevel ('pop-up') dialog setting</a>
 
@@ -228,16 +226,20 @@ For more comprehensive installation instructions, please refer to [INSTALLATION.
 
 **Instructions:**
 
-The UBX Configuration Dialog currently provides the following UBX configuration panels:
+**Modern UBX:**
+
+1. Version panel shows current device hardware/firmware versions (*Double-left-click to refresh*).
+1. Configuration Interface widget (CFG-VALSET, CFG-VALDEL and CFG-VALGET) queries and sets configuration for *modern protocols only*.
+1. Preset Commands widget supports a variety of user-defined UBX commands and queries - see [user-defined presets](#userdefined).
+
+**Legacy UBX:**
 
 1. Version panel shows current device hardware/firmware versions (*Double-left-click to refresh*).
 1. Protocol Configuration panel (CFG-PRT) sets baud rate and inbound/outbound protocols across all available ports (*legacy protocols only*).
 1. Solution Rate panel (CFG-RATE) sets navigation solution interval in ms (e.g. 1000 = 1/second) and measurement ratio (ratio between the number of measurements and the number of navigation solutions, e.g. 5 = five measurements per navigation solution) (*legacy protocols only*).
 1. For each of the panels above, clicking anywhere in the panel background will refresh the displayed information with the current configuration.
 1. Message Rate panel (CFG-MSG) sets message rates per port for UBX and NMEA messages (*legacy protocols only*). Message rate is relative to navigation solution frequency e.g. a message rate of '4' means 'every 4th navigation solution' (higher = less frequent).
-1. Configuration Interface widget (CFG-VALSET, CFG-VALDEL and CFG-VALGET) queries and sets configuration for *modern protocols only*.
 1. UBX Legacy Command configuration panel providing structured updates for a range of legacy CFG-* configuration commands for *legacy protocols only*. Note: 'X' (byte) type attributes can be entered as integers or hexadecimal strings e.g. 522125312 or 0x1f1f0000. Once a command is selected, the configuration is polled and the current values displayed. The user can then amend these values as required and send the updated configuration. Some polls require input arguments (e.g. portID) - these are highlighted and will be set at default values initially (e.g. portID = 0), but can be amended by the user and re-polled using the ![refresh](https://github.com/semuconsulting/PyGPSClient/blob/master/src/pygpsclient/resources/iconmonstr-refresh-lined-24.png?raw=true) button.
-1. Preset Commands widget supports a variety of user-defined UBX commands and queries - see [user-defined presets](#userdefined).
 
 ---
 ## <a name="nmeaconfig">NMEA Configuration Facilities</a>
@@ -518,15 +520,6 @@ For further details, refer to the `pygnssutils` homepage at [https://github.com/
 4. Some Linux Wayland platforms appear to require Toplevel dialog windows to be non-transient (`transient_dialog_b: 0`) for the window 'maximise' icon to work properly.
 
 5. Some Homebrew-installed Python environments on MacOS can give rise to critical segmentation errors (*illegal memory access*)  when shell subprocesses are invoked, due to the way permissions are implemented. This may, for example, affect About..Update functionality; the workaround is to update via a standard CLI `pip install --upgrade` command.
-
-6. Installing the optional `cryptography` package on some 32-bit Linux platforms (e.g. Raspberry Pi OS 32) may require [Rust compiler support](https://www.rust-lang.org/tools/install) and some [additional build dependencies](https://cryptography.io/en/latest/installation/) (see  [pyspartn cryptography installation notes](https://github.com/semuconsulting/pyspartn/tree/main/cryptography_installation#readme)):
-
-   ```shell
-   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-   sudo apt-get install build-essential libssl-dev libffi-dev python3-dev pkg-config
-   ```
-
-7. As of October 2025, u-blox have [discontinued their PointPerfect SPARTN L-Band and MQTT services](https://portal.u-blox.com/s/question/0D5Oj00000uB53GKAS/suspension-of-european-pointperfect-lband-spartn-service). As a result, PyGPSClient's [SPARTN Configuration](#spartnconfig) panel is largely redundant and is disabled by default in version>=1.5.17, though it can be re-enabled by manually setting the `lband_enabled_b` configuration setting to 1.
 
 ---
 ## <a name="license">License</a>
