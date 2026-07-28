@@ -58,7 +58,6 @@ from pygnssutils import (
     UNI_PROTOCOL,
     GNSSError,
     GNSSReader,
-    MQTTMessage,
 )
 
 try:
@@ -93,7 +92,6 @@ from pygpsclient.globals import (
     CONNECTED_SOCKET,
     DEFAULT_BUFSIZE,
     GNSS_PROTOCOL,
-    MQTT_PROTOCOL,
     SPARTN_PROTOCOL,
     STREAMDELAY,
     TTY_PROTOCOL,
@@ -504,8 +502,6 @@ class StreamHandler:
             msgprot = UNI_PROTOCOL
         elif isinstance(parsed_data, SPARTNMessage) and protfilter & SPARTN_PROTOCOL:
             msgprot = SPARTN_PROTOCOL
-        elif isinstance(parsed_data, MQTTMessage):
-            msgprot = MQTT_PROTOCOL
         elif isinstance(parsed_data, GNSSMessage):
             msgprot = GNSS_PROTOCOL
         elif isinstance(parsed_data, str):
@@ -531,7 +527,3 @@ class StreamHandler:
         # update GPX track file if enabled
         if self.__app.configuration.get("recordtrack_b"):
             self.__app.file_handler.update_gpx_track()
-
-        # update database if enabled
-        if self.__app.configuration.get("database_b"):
-            self.__app.sqlite_handler.load_data()

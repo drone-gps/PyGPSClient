@@ -1,5 +1,17 @@
 # PyGPSClient Release Notes
 
+### RELEASE 1.7.2
+
+FIXES:
+
+1. Various minor bug fixes.
+   - garbled configuration loaded message on startup.
+   - thread error when database logging started.
+
+CHANGES:
+
+1. [SPARTN Configuration Panel](https://github.com/semuconsulting/PyGPSClient/blob/master/SPARTN.md) removed. Recommend resaving any existing PyGPSClient json configuration files as several configuration settings referencing this panel will now be redundant.
+
 ### RELEASE 1.7.1
 
 FIXES:

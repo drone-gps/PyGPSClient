@@ -372,46 +372,6 @@ pygpsclient.socketconfig\_ntrip\_frame module
    :undoc-members:
    :show-inheritance:
 
-pygpsclient.spartn\_dialog module
----------------------------------
-
-.. automodule:: pygpsclient.spartn_dialog
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-pygpsclient.spartn\_gnss\_frame module
---------------------------------------
-
-.. automodule:: pygpsclient.spartn_gnss_frame
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-pygpsclient.spartn\_json\_config module
----------------------------------------
-
-.. automodule:: pygpsclient.spartn_json_config
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-pygpsclient.spartn\_lband\_frame module
----------------------------------------
-
-.. automodule:: pygpsclient.spartn_lband_frame
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-pygpsclient.spartn\_mqtt\_frame module
---------------------------------------
-
-.. automodule:: pygpsclient.spartn_mqtt_frame
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 pygpsclient.spectrum\_frame module
 ----------------------------------
 

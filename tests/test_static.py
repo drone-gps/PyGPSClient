@@ -134,18 +134,13 @@ class StaticTest(unittest.TestCase):
 
         cfg = Configuration(DummyApp())
         self.assertEqual(cfg.get("bpsrate_n"), 9600)
-        self.assertEqual(cfg.get("lbandclientdrat_n"), 2400)
         self.assertEqual(cfg.get("userport_s"), "")
-        self.assertEqual(cfg.get("spartnport_s"), "")
-        self.assertEqual(len(cfg.settings), 159)
-        kwargs = {"userport": "/dev/ttyACM0", "spartnport": "/dev/ttyACM1"}
+        self.assertEqual(len(cfg.settings), 125)
+        kwargs = {"userport": "/dev/ttyACM0"}
         cfg.loadcli(**kwargs)
         self.assertEqual(cfg.get("userport_s"), "/dev/ttyACM0")
-        self.assertEqual(cfg.get("spartnport_s"), "/dev/ttyACM1")
         cfg.set("userport_s", "/dev/ttyACM2")
-        cfg.set("spartnport_s", "/dev/ttyACM3")
         self.assertEqual(cfg.get("userport_s"), "/dev/ttyACM2")
-        self.assertEqual(cfg.get("spartnport_s"), "/dev/ttyACM3")
 
     def testloadfile(self):
 

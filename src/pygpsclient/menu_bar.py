@@ -14,7 +14,6 @@ Created on 12 Sep 2020
 
 from tkinter import Menu
 
-from pygpsclient.strings import DLGTSPARTN  # service discontinued by u-blox
 from pygpsclient.strings import (
     DLGTABOUT,
     DLGTGPX,
@@ -44,7 +43,6 @@ DIALOGS = (
     DLGTNMEA,
     DLGTNTRIP,
     DLGTSERVER,
-    DLGTSPARTN,  # service discontinued by u-blox
     DLGTGPX,
     DLGTIMPORTMAP,
     DLGTTTY,

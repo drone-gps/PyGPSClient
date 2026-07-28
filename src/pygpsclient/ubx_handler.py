@@ -22,7 +22,7 @@ from pyubx2 import UBXMessage, itow2utc
 
 from pygpsclient.globals import BSR, GLONASS_NMEA, UTF8
 from pygpsclient.helpers import corrage2int, fix2desc, hdg2yaw, ned2vector, svid2gnssid
-from pygpsclient.strings import DLGTSERVER, DLGTSPARTN, DLGTUBX, DLGTUBXLEGACY, NA
+from pygpsclient.strings import DLGTSERVER, DLGTUBX, DLGTUBXLEGACY, NA
 from pygpsclient.widget_state import VISIBLE, WDGSIGNALS, WDGSPECTRUM, WDGSYSMON
 
 UBXMODELS = {
@@ -115,10 +115,6 @@ class UBXHandler:
             self._process_MONVER(parsed_data)
         elif parsed_data.identity == "RXM-RTCM":
             self._process_RXM_RTCM(parsed_data)
-        elif parsed_data.identity == "RXM-PMP":
-            self._process_RXM_PMP(parsed_data)
-        elif parsed_data.identity == "RXM-SPARTN-KEY":
-            self._process_RXM_SPARTN_KEY(parsed_data)
 
     def _process_ACK(self, msg: UBXMessage):
         """
@@ -131,10 +127,6 @@ class UBXHandler:
             self.__app.dialog(DLGTUBX).update_pending(msg)
         if self.__app.dialog(DLGTUBXLEGACY) is not None:
             self.__app.dialog(DLGTUBXLEGACY).update_pending(msg)
-
-        # if SPARTN config dialog is open, send CFG & ACKs there
-        if self.__app.dialog(DLGTSPARTN) is not None:
-            self.__app.dialog(DLGTSPARTN).update_pending(msg)
 
         # if Spectrumview, Sysmon or Signals widgets are active, send ACKSs there
         if msg.identity in ("ACK-ACK", "ACK-NAK"):
@@ -676,26 +668,6 @@ class UBXHandler:
             rfbs.append((spec, spn, res, ctr, pga))
 
         self.__app.gnss_status.spectrum_data = rfbs
-
-    def _process_RXM_SPARTN_KEY(self, data: UBXMessage):
-        """
-        Process RXM-SPARTN_KEY sentences - poll response.
-
-        :param UBXMessage data: RXM-SPARTN_KEY poll response message
-        """
-
-        if self.__app.dialog(DLGTSPARTN) is not None:
-            self.__app.dialog(DLGTSPARTN).update_pending(data)
-
-    def _process_RXM_PMP(self, data: UBXMessage):
-        """
-        Process RXM-PMP sentence - SPARTN L-Band data.
-
-        :param UBXMessage data: RXM-PMP message
-        """
-
-        if self.__app.dialog(DLGTSPARTN) is not None:
-            self.__app.dialog(DLGTSPARTN).update_pending(data)
 
     def _process_ESF_ALG(self, data: UBXMessage):
         """
