@@ -1,5 +1,12 @@
 # PyGPSClient Release Notes
 
+### RELEASE 1.7.3
+
+FIXES:
+
+1. Fix for unattended UI lag issue.
+1. Remove redundant CLI arguments relating to disused SPARTN client.
+
 ### RELEASE 1.7.2
 
 FIXES:
