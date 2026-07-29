@@ -21,7 +21,7 @@
 
 PyGPSClient is a free, open-source, multi-platform graphical GNSS/GPS testing, diagnostic and configuration application written entirely by volunteers in Python and tkinter. 
 * Runs on any platform which supports a Python 3 interpreter (>=3.10) and tkinter (>=8.6) GUI framework, including Windows, MacOS and Linux.
-* Supports NMEA, UBX (u-blox binary), SBF (Septentrio binary), UNI (Unicore binary), QGC (Quectel binary), RTCM3, NTRIP, SPARTN, MQTT and TTY (ASCII text) protocols¹.
+* Supports NMEA, UBX (u-blox binary), SBF (Septentrio binary), UNI (Unicore binary), QGC (Quectel binary), RTCM3, SPARTN, NTRIP and TTY (ASCII text) protocols¹.
 * Capable of reading from a variety of GNSS data streams: Serial (USB / UART), Socket (TCP / UDP), binary data stream (terminal or file capture) and binary recording (e.g. u-center \*.ubx).
 * Provides [NTRIP client](#ntripconfig) facilities for both RTCM3 and SPARTN NTRIP services.
 * Can serve as an [NTRIP base station](#basestation) with an RTK-compatible receiver (e.g. u-blox ZED-F9P/ZED-X20P, Quectel LG/LC Series, Septentrio Mosaic Series or Unicore UM9** Series).
@@ -107,7 +107,7 @@ For more comprehensive installation instructions, please refer to [INSTALLATION.
 
 1. By default, the Settings panel is displayed to the right of the main application window. It can be hidden or shown via Menu..View..Hide/Show Settings. The panel can also be 'undocked' from the main application window via Menu..View..Undock Settings and - if [non-transient](#transient) (`transient_dialog_b: 0`) - minimized independently of the main window. Exiting the undocked dialog, or selecting Menu..View..Dock Settings, will 'dock' the panel.
 2. Protocols Shown - Select which message protocols to display in the console; NMEA, UBX (*u-blox binary*), SBF (*Septentrio binary*), UNI (*Unicore binary*), QGC (*Quectel binary*), RTCM3, SPARTN or TTY (*terminal*). NB: this only changes the *displayed* protocols - to change the actual protocols output by the receiver, use the relevant configuration command(s).
-    - **NB:** Serial connection must be stopped before changing to or from TTY (terminal) protocol or "Meta Only" mode. Enabling TTY (terminal) mode will disable all other protocols.
+    - **NB:** Serial connection must be stopped before changing to or from TTY (terminal) protocol mode. Enabling TTY (terminal) mode will disable all other protocols.
 3. To connect to a GNSS receiver via USB or UART port, select the device from the listbox, set the appropriate serial connection parameters and click 
 ![connect icon](https://github.com/semuconsulting/PyGPSClient/blob/master/src/pygpsclient/resources/usbport-1-24.png?raw=true). The application will endeavour to pre-select a recognised GNSS/GPS device but this is platform and device dependent. Press the ![refresh](https://github.com/semuconsulting/PyGPSClient/blob/master/src/pygpsclient/resources/iconmonstr-refresh-6-16.png?raw=true) button to refresh the list of connected devices at any point. 
     - `Rate bps` (baud rate) is typically the only setting that might need adjusting, but tweaking the `timeout` setting may improve performance on certain platforms. 
@@ -132,14 +132,13 @@ For more comprehensive installation instructions, please refer to [INSTALLATION.
 
 #### <a name="config">Saving and loading configuration settings</a>
 
-15. Configuration settings for PyGPSClient can be saved and recalled via the Menu..File..Save/Load Configuration options. By default, PyGPSClient will look for a file named `pygpsclient.json` in the user's home directory. Certain configuration settings require manual editing e.g. custom preset UBX, NMEA and TTY commands and tag colour schemes - see details below.
+15. Configuration settings for PyGPSClient can be saved and recalled via the Menu..File..Save/Load Configuration options. By default, PyGPSClient will look for a file named `pygpsclient.json` in the user's home directory. Certain configuration settings require manual editing e.g. console tagging colour schemes - see details below.
     - It is recommended to re-save the configuration settings after each PyGPSClient version update, or if you see the warning "Consider re-saving" on startup.
     - PyGPSClient will prompt you to stop all running input and output streams before loading a new configuration.
 
 #### <a name="updates">Checking for the latest version</a>
 
-16. The About dialog (Menu..Help..About) includes a facility to check the latest available versions of PyGPSClient and its subsidiary modules, and initiate an automatic update. Tick the 'Check on startup' box to perform this check on startup (*note that this requires internet access, which may result in slower startup times on platforms with low bandwidth / high latency internet connections*). The facility may be unavailable in certain Homebrew-installed Python environments due to technical constraints.
-    - The application must be closed and restarted for any update to take effect.
+16. The About dialog (Menu..Help..About) includes a facility to check the latest available versions of PyGPSClient and its subsidiary modules, and initiate an automatic update. Tick the 'Check on startup' box to perform this check on startup (*note that this requires internet access, which may result in slower startup times on platforms with low bandwidth / high latency internet connections*). The facility may be unavailable in certain Homebrew-installed Python environments due to technical constraints. The application must be closed and restarted for any update to take effect.
 
 #### <a name="datalog">Datalogging, GPX Track Recording and Database</a>
 
@@ -173,15 +172,14 @@ For more comprehensive installation instructions, please refer to [INSTALLATION.
 27. [RINEX Conversion](#rinex) facility which supports conversion of previously-saved binary datalogs to RINEX observation and navigation format. To display the RINEX Conversion dialog, go to Menu..Options..RINEX Conversion.
 28. [Import Custom Map](#custommap) facility which allows the user to import geo-referenced images for use as background maps. To display the Import Custom Map dialog, go to Menu..Options..Import Custom Map.
 29. [Configuration Command Recorder](#recorder) facility which allows the user to record, save, load, import (*as a preset*) and replay UBX, NMEA or TTY configuration commands sent to a receiver. To display the Command Record Facility dialog, go to Menu..Options..Configuration Command Recorder.
-30. [SPARTN Client](#spartnconfig) facility with the ability to configure an IP or L-Band SPARTN Correction source and SPARTN-compatible GNSS receiver (e.g. ZED-F9P) and pass the incoming correction data to the GNSS receiver (*requires an Internet connection and access to a SPARTN location service*). To display the SPARTN Client Configuration Dialog, go to Menu..Options..SPARTN Configuration Dialog.
 
 #### <a name="refreshrate">GUI refresh rate setting</a>
 
-31. PyGPSClient processes all incoming GNSS data in 'real time' but, by default, the GUI is only refreshed every 0.5 seconds. The refresh rate can be manually configured via the `guiupdateinterval_f` setting in the json configuration file. **NB:** PyGPSClient may become unresponsive on slower platforms (e.g. Raspberry Pi) at high message rates if the GUI update interval is less than 0.1 seconds.
+30. PyGPSClient processes all incoming GNSS data in 'real time' but, by default, the GUI is only refreshed every 0.5 seconds. The refresh rate can be manually configured via the `guiupdateinterval_f` setting in the json configuration file. **NB:** PyGPSClient may become unresponsive on slower platforms (e.g. Raspberry Pi) at high message rates if the GUI update interval is less than 0.2 seconds.
 
 #### <a name="transient">Toplevel ('pop-up') dialog setting</a>
 
-32. The behaviour of Toplevel ('pop-up') dialogs will depend on the screen resolution and 'transient' setting. If the width or height of a Toplevel dialog exceeds the screen resolution, the dialog will be displayed in a scrollable, resizeable window. Otherwise, the dialog is displayed as a fixed, non-resizeable panel.
+31. The behaviour of Toplevel ('pop-up') dialogs will depend on the screen resolution and 'transient' setting. If the width or height of a Toplevel dialog exceeds the screen resolution, the dialog will be displayed in a scrollable, resizeable window. Otherwise, the dialog is displayed as a fixed, non-resizeable panel.
     - A boolean configuration setting `transient_dialog_b` governs whether Toplevel dialogs are 'transient' (i.e. always on top of main application dialog) or not. Changing this setting to `0` allows Toplevel dialogs to be minimised independently of the main application window, but be mindful that some dialogs may end up hidden behind others e.g. "Open file/folder" dialogs. **If a file open button appears unresponsive, check that the "Open file/folder" panel isn't already open but obscured**. 
     - If you're accessing the desktop via a VNC session (e.g. to a headless Raspberry Pi) it is recommended to keep the setting at the default `1`, as VNC may not recognise keystrokes on overlaid non-transient windows.
     - A boolean configuration setting `resizeable_dialog_b` governs whether *all* Toplevel dialogs are resizeable, irrespective of the default setting in `DialogState`. Setting this to '1' provides a workaround for issues with some scaled Linux Wayland displays.
@@ -430,9 +428,10 @@ The RINEX Conversion Dialog supports the conversion of raw observation, navigati
 4. Select the datasource for each RINEX output type e.g. UBX (u-blox), RTCM3, NMEA 0183.
 5. (Optional) Select the GNSS to be included e.g. GPS, GAL, BDS, etc.
 6. (Optional) Select the RINEX observation (frequency / signal) codes to be included e.g. 1C, 2L, 5I, etc.
-7. (Optional) Expand the advanced panel ![start icon](https://github.com/semuconsulting/PyGPSClient/blob/master/src/pygpsclient/resources/iconmonstr-caret-right-filled-32.png?raw=true) to enter details of the marker, antenna, receiver, observer and any user-defined comments.
-8. Click ![start icon](https://github.com/semuconsulting/PyGPSClient/blob/master/src/pygpsclient/resources/iconmonstr-media-control-48-24.png?raw=true) to process the file. A progress bar will be displayed and, when complete, the output file names (*.rnx) and record counts will be displayed at the foot of the dialog.
-9. Processing can be cancelled by clicking ![cancel icon](https://github.com/semuconsulting/PyGPSClient/blob/master/src/pygpsclient/resources/iconmonstr-x-mark-9-24.png?raw=true).
+7. (Optional) Select the RINEX GNSS/SV (satellite) codes to be included e.g. G11, E03, C23, etc.
+8. (Optional) Expand the advanced panel ![start icon](https://github.com/semuconsulting/PyGPSClient/blob/master/src/pygpsclient/resources/iconmonstr-caret-right-filled-32.png?raw=true) to enter details of the marker, antenna, receiver, observer and any user-defined comments.
+9. Click ![start icon](https://github.com/semuconsulting/PyGPSClient/blob/master/src/pygpsclient/resources/iconmonstr-media-control-48-24.png?raw=true) to process the file. A progress bar will be displayed and, when complete, the output file names (*.rnx) and record counts will be displayed at the foot of the dialog.
+10. Processing can be cancelled by clicking ![cancel icon](https://github.com/semuconsulting/PyGPSClient/blob/master/src/pygpsclient/resources/iconmonstr-x-mark-9-24.png?raw=true).
 
 ---
 ## <a name="mapquestapi">MapQuest API Key</a>
