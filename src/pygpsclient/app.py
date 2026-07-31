@@ -197,8 +197,6 @@ class App(Tk):
         self._server_status = -1  # socket server status -1 = inactive
         self.gnss_outqueue = Queue()  # messages to GNSS receiver
         self.ntrip_inqueue = Queue()  # messages from NTRIP source
-        self.spartn_inqueue = Queue()  # messages from SPARTN correction rcvr
-        self.spartn_outqueue = Queue()  # messages to SPARTN correction rcvr
         self.socket_inqueue = Queue()  # message from socket
         self.socket_outqueue = Queue()  # message to socket
         self.console_outqueue = Queue()  # message to console

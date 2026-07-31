@@ -15,7 +15,7 @@
 [Mapquest API Key](#mapquestapi) |
 [User-defined Presets](#userdefined) |
 [CLI Utilities](#cli) |
-[Troubleshooting](#troubleshoot) |
+[Troubleshooting & Known Issues](#troubleshoot) |
 [License](#license) |
 [Author Information](#author)
 
@@ -508,17 +508,19 @@ The `pygnssutils` and `pyubxutils` libraries which underpin many of the function
 For further details, refer to the `pygnssutils` homepage at [https://github.com/semuconsulting/pygnssutils](https://github.com/semuconsulting/pygnssutils) or `pyubxutils` homepage at [https://github.com/semuconsulting/pyubxutils](https://github.com/semuconsulting/pyubxutils).
 
 ---
-## <a name="troubleshoot">Troubleshooting</a>
+## <a name="troubleshoot">Troubleshooting and Known Issues</a>
 
-1. **NB:** The latest version of Python for MacOS (>=3.14.5) comes with a new version of tkinter (9.0). There appear to be fairly serious performance issues with this version on MacOS Tahoe which render the PyGPSClient UI somewhat sluggish. For the time being, it is recommended that users use >=3.14.4. This issue does *not* affect other operating systems or Python apps not using tkinter.
+1. There is a known issue with PyGPSClient GUI refreshes becoming progressively slower if the app is left unattended (_i.e. no user interaction_) for an extended period - typically 30 minutes or more. The issue is more pronounced on low-end SBC platforms like the Raspberry Pi. **Underlying processing (including message parsing and datalogging) is unaffected**, and the GUI can generally be 'woken up' within a few seconds via a simple user interaction e.g. resizing the main panel. The root cause of this issue is under investigation, but is believed to be related to tkinter idle event processing.
 
-2. If you encounter persistent `WARNING>>Error parsing data stream Serial stream terminated unexpectedly` messages in the console, this may be indicative of insufficient serial port bandwidth (baudrate or timeout) for the current output message cohort (*particularly if this includes Ephemera or Observation data*). Try increasing the baudrate in the first instance.
+2. **NB:** The latest version of Python for MacOS (>=3.14.5) comes with a new version of tkinter (9.0). There appear to be fairly serious performance issues with this version on MacOS Tahoe which render the PyGPSClient GUI somewhat sluggish. For the time being, it is recommended that users use >=3.14.4. This issue does *not* affect other operating systems or Python apps not using tkinter.
 
-3. Most [budget USB-UART adapters](https://www.amazon.co.uk/DSD-TECH-adapter-FT232RL-Compatible/dp/B07BBPX8B8?ref_=ast_sto_dp) (e.g. FT232, CH345, CP2102, *including those embedded on development boards*) have a bandwidth limit of around 3Mbps (≈ 375000 baud) and may not work reliably above 230600 baud, even if the receiver supports higher baud rates. If you're using an adapter and notice significant message corruption (e.g. frequent `WARNING>>..invalid checksum` messages), try reducing the baud rate to a maximum 230600.
+3. If you encounter persistent `WARNING>>Error parsing data stream Serial stream terminated unexpectedly` messages in the console, this may be indicative of insufficient serial port bandwidth (baudrate or timeout) for the current output message cohort (*particularly if this includes raw Ephemerides or Observation data*). Try increasing the baudrate in the first instance.
 
-4. Some Linux Wayland platforms appear to require Toplevel dialog windows to be non-transient (`transient_dialog_b: 0`) for the window 'maximise' icon to work properly.
+4. Most [budget USB-UART adapters](https://www.amazon.co.uk/DSD-TECH-adapter-FT232RL-Compatible/dp/B07BBPX8B8?ref_=ast_sto_dp) (e.g. FT232, CH345, CP2102, *including those embedded on development boards*) have a bandwidth limit of around 3Mbps (≈ 375000 baud) and may not work reliably above 230600 baud, even if the receiver supports higher baud rates. If you're using an adapter and notice significant message corruption (e.g. frequent `WARNING>>..invalid checksum` messages), try reducing the baud rate to a maximum 230600.
 
-5. Some Homebrew-installed Python environments on MacOS can give rise to critical segmentation errors (*illegal memory access*)  when shell subprocesses are invoked, due to the way permissions are implemented. This may, for example, affect About..Update functionality; the workaround is to update via a standard CLI `pip install --upgrade` command.
+5. Some Linux Wayland platforms appear to require Toplevel dialog windows to be non-transient (`transient_dialog_b: 0`) for the window 'maximise' icon to work properly.
+
+6. Some Homebrew-installed Python environments on MacOS can give rise to critical segmentation errors (*illegal memory access*)  when shell subprocesses are invoked, due to the way permissions are implemented. For this reason, application updates via the  About..Update button are disabled on Homebrew environments; use the CLI `python3 -m pip install --upgrade pygpsclient` command instead.
 
 ---
 ## <a name="license">License</a>
