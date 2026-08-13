@@ -1,6 +1,6 @@
 # u-center 经典版 GPS / GNSS 快速上手手册
 
-> 适用软件：u-blox u-center 经典版 25.06（不是 u-center 2）  
+> 适用软件：u-blox u-center 经典版 25.06（不是 u-center 2）<br>
 > 适用场景：普通 GPS 模块、u-blox 模块、USB GPS、CH340/CP2102/FTDI 转串口、无人机和飞控 GPS 调试。
 
 ## 1. 先记住：判断 GPS 是否正常的四个步骤
