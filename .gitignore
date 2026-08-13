@@ -11,6 +11,7 @@
 /__pycache__
 /.dbeaver
 /.pytest_cache/
+/.venv/
 /.settings
 /build
 /dist
